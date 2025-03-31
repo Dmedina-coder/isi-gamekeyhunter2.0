@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
 
-function AgeSelectionGroup() {
-  const [selectedAge, setSelectedAge] = useState(null);
+const AgeSelectionGroup = ({ onAgeSelect }) => {
+  	const [selectedAge, setSelectedAge] = useState(null);
 
   const ageRanges = [
     "0 - 13 años",
@@ -15,6 +15,7 @@ function AgeSelectionGroup() {
 
   const handleAgeChange = (index) => {
     setSelectedAge(index);
+	onAgeSelect(index+1);
   };
 
   return (

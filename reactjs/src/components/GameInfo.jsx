@@ -6,12 +6,14 @@ function GameInfo( {title} ) {
   const [gameID, setGameID] = useState(null);
   const [error, setError] = useState(null);
 
+	const formattedTitle = title.replace(/ /g, "-");
+
   useEffect(() => {
 
     const fetchInfo = async () => {
       try {
-        const responseID = await fetch(`http://127.0.0.1:5020/api/v1/cheapshark/steamidJson?title=${title}`);
-        const response = await fetch(`http://127.0.0.1:5000/api/v1/steam/find?title=${title}`);
+        const responseID = await fetch(`http://127.0.0.1:5020/api/v1/cheapshark/steamidJson?title=${formattedTitle}`);
+        const response = await fetch(`http://127.0.0.1:5000/api/v1/steam/find?title=${formattedTitle}`);
         if (!response.ok) {
           throw new Error("Error al obtener los datos del servidor");
         }

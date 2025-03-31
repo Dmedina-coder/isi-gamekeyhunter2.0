@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 
-function GamePreferencesGroup() {
+function GamePreferencesGroup({ onGameSelect }) {
   const [selectedGames, setSelectedGames] = useState([]);
 
   const gameTypes = [
@@ -18,11 +18,14 @@ function GamePreferencesGroup() {
 
   const handleGameChange = (index) => {
     setSelectedGames((prev) => {
+      let updatedGames;
       if (prev.includes(index)) {
-        return prev.filter((i) => i !== index);
+        updatedGames = prev.filter((i) => i !== index);
       } else {
-        return [...prev, index];
+        updatedGames = [...prev, index];
       }
+      onGameSelect(updatedGames); // Llama a la función del padre con los índices seleccionados
+      return updatedGames;
     });
   };
 

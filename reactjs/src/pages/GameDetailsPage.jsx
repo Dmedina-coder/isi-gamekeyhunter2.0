@@ -9,7 +9,7 @@ import Footer from "../components/Footer";
 
 function GameDetailsPage() {
   const { gameid } = useParams(); // Get the 'gameid' parameter from the URL
-  const userID = "1";
+  const userID = sessionStorage.getItem("userId") || "1";
 
   useEffect(() => {
     const postData = async () => {
@@ -37,7 +37,7 @@ function GameDetailsPage() {
     };
 
     postData();
-  }, [gameid, userID]); // Ejecutar cuando 'gameid' o 'userID' cambien
+  }, []); // Ejecutar cuando 'gameid' o 'userID' cambien
 
   return (
     <>

@@ -1,17 +1,35 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import AgeSelectionGroup from "./AgeSelectionGroup";
 import GamePreferencesGroup from "./GamePreferencesGroup";
+import { useLocation , useNavigate } from "react-router-dom";
 
 function UserForm() {
-  const [formData, setFormData] = useState({
-    name: "",
-    surname: "",
-    address: "",
-    province: "",
-    city: "",
-    postalCode: ""
-  });
+
+	const navigate = useNavigate(); // Initialize the navigate function
+	const location = useLocation();
+	const { email, password } = location.state || {}; // Obtener datos del estado de navegación
+	const [selectedAge, setSelectedAge] = useState(null);
+	const [selectedGames, setSelectedGames] = useState([]);
+
+	const handleAgeSelection = (index) => {
+		setSelectedAge(index); // Actualiza el estado del padre con el índice seleccionado
+	};
+	const handleGameSelection = (selected) => {
+		console.log("Juegos seleccionados:", selected); // Verifica los índices seleccionados
+		setSelectedGames(selected); // Actualiza el estado del padre
+	  };
+
+	const [formData, setFormData] = useState({
+		mail: email,
+		pass: password,
+		name: "",
+		surname: "",
+		address: "",
+		province: "",
+		city: "",
+		postalCode: ""
+	});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,10 +39,90 @@ function UserForm() {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission logic here
-    console.log("Form submitted:", formData);
+  const handleSubmit = async (e) => {
+	e.preventDefault();
+	// Validar que todos los campos estén completos
+	if (
+	  !formData.name ||
+	  !formData.surname ||
+	  !formData.address ||
+	  !formData.province ||
+	  !formData.city ||
+	  !formData.postalCode ||
+	  !selectedAge ||
+	  selectedGames.length < 3
+	) {
+	  alert("Por favor, completa todos los campos y selecciona al menos 3 géneros.");
+	  return;
+	}
+	// Crear el cuerpo de la solicitud
+	const requestBody = {
+	  Nombre: formData.name,
+	  Apellidos: formData.surname,
+	  Email: formData.mail,
+	  Password: formData.pass,
+	  Direccion: formData.address,
+	  Provincia: formData.province,
+	  Ciudad: formData.city,
+	  CP: formData.postalCode,
+	  RangoEdad: selectedAge
+	};
+  
+	try {
+	  // Llamada a la API
+	  const response = await fetch("http://localhost:5040/api/v1/registerUser", {
+		method: "POST",
+		headers: {
+		  "Content-Type": "application/json",
+		},
+		body: JSON.stringify(requestBody),
+	  });
+  
+	  if (response.ok) {
+		const data = await response.json();
+		console.log("Usuario registrado con éxito:", data);
+		alert("Usuario registrado con éxito.");
+		const userId = data.ID_Usuario; // Suponiendo que la API devuelve el ID del usuario registrado
+
+		// Guardar el ID del usuario en sessionStorage
+        sessionStorage.setItem("userId", data.ID_Usuario);
+
+		// Registrar cada género seleccionado
+		for (const genreId of selectedGames) {
+		  const genreResponse = await fetch("http://localhost:5040/api/v1/addGenre", {
+			method: "POST",
+			headers: {
+			  "Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+			  ID_Usuario: userId,
+			  ID_Genero: genreId+1,
+			}),
+		  });
+	
+		  if (!genreResponse.ok) {
+			const genreError = await genreResponse.json();
+			console.error(`Error al registrar género ${genreId}: ${genreError.error}`);
+		  } else {
+			console.log(`Género ${genreId} registrado con éxito.`);
+		  }
+		}
+		navigate("/login", {});
+	  } else {
+		const statusCode = response.status; // Extraer el código de estado
+    	if (statusCode === 409) { // Código 409 para conflicto
+			console.error("Error al registrar usuario:", response.statusText);
+			alert("Error al registrar usuario. El email introducido ya esta registrado");
+			navigate("/registration", {});
+		}else{
+			console.error("Error al registrar usuario:", response.statusText);
+			alert("Error al registrar usuario. Por favor, inténtalo de nuevo.");
+		}
+	  }
+	} catch (error) {
+	  console.error("Error en la solicitud:", error);
+	  alert("Error en la solicitud. Por favor, verifica tu conexión.");
+	}
   };
 
   return (
@@ -102,8 +200,8 @@ function UserForm() {
           />
         </div>
 
-        <AgeSelectionGroup />
-        <GamePreferencesGroup />
+        <AgeSelectionGroup onAgeSelect={handleAgeSelection}/>
+        <GamePreferencesGroup onGameSelect={handleGameSelection}/>
 
         <button type="submit" className="submit-button">Finalizar</button>
       </form>

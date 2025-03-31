@@ -21,10 +21,10 @@ function Home() {
         title="TOP 5 MAS BUSCADOS"
         className="top-searched"
       />
-      {/*<GameListLast
+      {/*{<GameListLast
         title="TOP 5 ULTIMOS BUSCADOS"
         className="latest-searched"
-      />*/}
+      />}*/}
       <TestimonialSection />
       <Footer />
 

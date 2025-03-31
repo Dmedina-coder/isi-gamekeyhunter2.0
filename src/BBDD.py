@@ -81,6 +81,19 @@ def get_tables():
     return jsonify({"tables": tables}), 200
 
 #endpoint para registrar a un usuario nuevo
+#curl -X POST http://localhost:5040/api/v1/registerUser \
+#-H "Content-Type: application/json" \
+#-d '{
+#  "Nombre": "",
+#  "Apellidos": "",
+#  "Email": "",
+#  "Password": "",
+#  "Direccion": "",
+#  "Provincia": "",
+#  "Ciudad": "",
+#  "CP": "",
+#  "RangoEdad": ""
+#}'
 
 @app.route("/api/v1/registerUser", methods=['POST'])
 def register():
@@ -90,7 +103,12 @@ def register():
     for field in required_fields:
         if field not in data:
             return jsonify({"error": f"Falta el campo '{field}'"}), 400
-        
+       
+    user = Usuarios.query.filter_by(Email=data["Email"]).first()
+
+    if user:
+        return jsonify({"error": "Usuario ya registrado"}), 409   
+     
     user = Usuarios(
         Nombre=data["Nombre"],
         Apellidos=data["Apellidos"],
@@ -100,19 +118,21 @@ def register():
         Provincia=data["Provincia"],
         Ciudad=data["Ciudad"],
         CP=data["CP"],
+        RangoEdad = data["RangoEdad"],
     )
 
-    rango_edad = Rango_edades(
-        Descripcion = data["RangoEdad"]
-    )
-    db.session.add(rango_edad)
-    db.session.commit()
-    user.RangoEdad = rango_edad.ID_Edad
     db.session.add(user)
     db.session.commit()
-    return jsonify({"result":"ok"})
+    
+    return jsonify({"result":"ok", "ID_Usuario": user.ID})
 
 #endpoint para añadir un juego
+# curl -X POST http://localhost:5040/api/v1/addGame \
+# -H "Content-Type: application/json" \
+# -d '{
+#   "ID_Usuario": 1,
+#   "NombreJuego": "Super Mario Odyssey"
+# }'
 
 @app.route("/api/v1/addGame", methods=['POST'])
 def addGame():
@@ -147,13 +167,19 @@ def addGame():
     return jsonify({"result":"ok"})
 
 #endpoint para añadir un genero
+# curl -X POST http://localhost:5040/api/v1/addGenre \
+# -H "Content-Type: application/json" \
+# -d '{
+#   "ID_Usuario": 1,
+#   "ID_Genero": 1
+# }'
 
 @app.route("/api/v1/addGenre", methods=['POST'])
 def addGenre():
     data = request.json  # Obtener datos del request
 
     # Validar que los campos requeridos estén presentes
-    required_fields = ["ID_Usuario", "NombreJuego"]
+    required_fields = ["ID_Usuario", "ID_Genero"]
     for field in required_fields:
         if field not in data:
             return jsonify({"error": f"Falta el campo '{field}'"}), 400
@@ -162,18 +188,10 @@ def addGenre():
 
     if not user:
         return jsonify({"error": "Usuario no encontrado"}), 404
-    
-    genre = Generos.query.filter_by(Nombre=data["NombreGenero"]).first()
-    if not genre:
-        genre = Generos(
-            Nombre=data["NombreGenero"]
-        )
-        db.session.add(genre)
-        db.session.commit()
 
     userGenre = Usuario_Genero(
         ID_Usuario=user.ID,
-        ID_Genero=genre.ID_Genero
+        ID_Genero=data["ID_Genero"]
     )
 
     db.session.add(userGenre)
@@ -209,7 +227,26 @@ def most_popular_games():
 
     return jsonify({"juegos": games_list})
 
+@app.route("/api/v1/username/<int:user_id>", methods=["GET"])
+def nombre_usuario(user_id):
+    # Buscar el usuario por ID
+    user = Usuarios.query.get(user_id)
+
+    if not user:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    # Devolver el nombre del usuario
+    return jsonify({"Nombre": user.Nombre})
+
 #endpoint para iniciar sesión
+
+# curl -X POST http://localhost:5040/api/v1/login \
+# -H "Content-Type: application/json" \
+# -d '{
+#   "Email": "",
+#   "Password": ""
+# }'
+
 
 @app.route("/api/v1/login", methods=["POST"])
 def login():

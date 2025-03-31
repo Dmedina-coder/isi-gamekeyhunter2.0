@@ -12,7 +12,7 @@ def cheapShark():
     
     global strResult
     responseID = requests.get(
-    "http://127.0.0.1:5000/api/v1/cheapshark/gameid?title="+request.args["title"]
+    "http://127.0.0.1:5020/api/v1/cheapshark/gameid?title="+request.args["title"]
     )
     response = requests.get(
     "https://www.cheapshark.com/api/1.0/games?id="+str(responseID.json())
@@ -39,7 +39,7 @@ def mostsearched():
         custom_json = []
         for game in data:
             responseJuego = requests.get(
-            "http://127.0.0.1:5000/api/v1/cheapshark/find?title="+(game.get("Nombre").replace("-",""))
+            "http://127.0.0.1:5020/api/v1/cheapshark/find?title="+(game.get("Nombre").replace("-",""))
             )
             
             datosJuegos = responseJuego.json()
@@ -78,7 +78,7 @@ def lastsearched():
         custom_json = []
         for game in data:
             responseJuego = requests.get(
-            "http://127.0.0.1:5000/api/v1/cheapshark/find?title="+(game.get("Nombre").replace("-",""))
+            "http://127.0.0.1:5020/api/v1/cheapshark/find?title="+(game.get("Nombre").replace("-",""))
             )
             
             datosJuegos = responseJuego.json()
@@ -86,7 +86,7 @@ def lastsearched():
             idSteam = datosJuegos.get("info", {}).get("steamAppID", "730")
             
             responseIMG = requests.get(
-            "http://127.0.0.1:5010/api/v1/steam/findid?id="+idSteam
+            "http://127.0.0.1:5000/api/v1/steam/findid?id="+idSteam
             )
             datosImagen = responseIMG.json()
             

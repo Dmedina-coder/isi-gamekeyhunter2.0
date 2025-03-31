@@ -1,7 +1,50 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 function LoginForm() {
+	const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      alert("Por favor, completa todos los campos.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5040/api/v1/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          Email: email,
+          Password: password,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Inicio de sesión exitoso:", data);
+
+        // Guardar el ID del usuario en sessionStorage
+        sessionStorage.setItem("userId", data.ID_Usuario);
+        alert("Inicio de sesión exitoso.");
+		navigate("/home", {});
+        // Redirigir al usuario o realizar otra acción
+      } else {
+        const errorData = await response.json();
+        console.error("Error al iniciar sesión:", errorData.error);
+        alert(`Error al iniciar sesión: ${errorData.error}`);
+      }
+    } catch (error) {
+      console.error("Error en la solicitud:", error);
+      alert("Error en la solicitud. Por favor, verifica tu conexión.");
+    }
+  };
+
   return (
     <section className="form-section">
       <div className="form-container">
@@ -12,6 +55,8 @@ function LoginForm() {
               type="email"
               placeholder="Ejemplo@email.com"
               className="email-input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)} // Actualizar el estado del email
             />
           </div>
           <div className="input-group">
@@ -19,12 +64,16 @@ function LoginForm() {
             <input
               type="password"
               className="password-input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)} // Actualizar el estado del password
             />
           </div>
-          <button className="signin-button">Sign In</button>
+          <button className="signin-button" onClick={handleLogin}>
+            Sign In
+          </button>
           <div className="links-container">
-            <a href="/registration" className="form-link" >
-              Forgot password?
+            <a href="/registration" className="form-link">
+              
             </a>
             <a href="/registration" className="form-link">
               ¿No tienes Cuenta? Registrate

@@ -9,7 +9,7 @@ function FreeSection() {
   useEffect(() => {
     const fetchFree = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:5000/api/v1/epicgames");
+        const response = await fetch("http://127.0.0.1:5010/api/v1/epicgames");
         if (!response.ok) {
           throw new Error("Error al obtener los datos del servidor");
         }

@@ -5,15 +5,22 @@ import { Link, useNavigate } from "react-router-dom";
 function RegistrationForm() {
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleSubmit = () => {
-    if (password === confirmPassword) {
-      navigate("/form");
-    } else {
-      setError("Las contraseñas no coinciden");
-    }
+	if (!email || !password) {
+		setError("Todos los campos son obligatorios");
+		return;
+	}
+	else{
+		if (password === confirmPassword) {
+			navigate("/form", { state: { email, password } }); // Pasar datos al navegar
+		  } else {
+			setError("Las contraseñas no coinciden");
+		  }
+	}
   };
 
   return (
@@ -26,6 +33,7 @@ function RegistrationForm() {
               id="email"
               type="email"
               placeholder="Ejemplo@email.com"
+			  onChange={(e) => setEmail(e.target.value)}
               className="email-input"
             />
           </div>

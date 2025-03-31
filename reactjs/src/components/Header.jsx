@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
 import logo from "../media/Logo_web.png"; // Import the logo image
 import banner from "../media/Banner_web.png"; // Import the banner image
@@ -8,10 +8,33 @@ import loginIcon from "../media/login_icon.png"; // Import the login icon image
 function Header() {
   const [searchText, setSearchText] = useState("");
   const navigate = useNavigate(); // Initialize the navigate function
+  const [userName, setUserName] = useState("");
+
+  // Obtener el ID del usuario desde sessionStorage
+  const userId = sessionStorage.getItem("userId");
 
   const handleInputChange = (event) => {
     setSearchText(event.target.value);
   };
+
+  useEffect(() => {
+    // Si hay un userId, obtener el nombre del usuario
+    if (userId) {
+      fetch(`http://localhost:5040/api/v1/username/${userId}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Error al obtener el nombre de usuario");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setUserName(data.Nombre); // Guardar el nombre del usuario en el estado
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+  }, [userId]);
 
   const handleSearchSubmit = (event) => {
     event.preventDefault(); // Prevent the default form submission
@@ -19,6 +42,13 @@ function Header() {
       const formattedSearchText = searchText.toLowerCase().replace(/\s+/g, "-"); // Format the search text
       navigate(`/game-details/${formattedSearchText}`); // Redirect to the GameDetails page
     }
+  };
+
+  const handleLogout = () => {
+    // Vaciar la variable userId en sessionStorage
+    sessionStorage.removeItem("userId");
+    alert("Has cerrado sesión.");
+    navigate("/home");
   };
 
   return (
@@ -38,13 +68,23 @@ function Header() {
             className="logo-text"
           />
         </Link>
-        <button className="login-button" onClick={() => navigate("/login")}>
-          <img
-            src={loginIcon}
-            alt="Login"
-            className="login-icon"
-          />
-        </button>
+        {/* Mostrar el botón de login si userId está vacío */}
+        {!userId ? (
+          <button className="login-button" onClick={() => navigate("/login")}>
+            <img
+              src={loginIcon}
+              alt="Login"
+              className="login-icon"
+            />
+          </button>
+        ) : (
+          <div className="logout-container">
+            <p>Bienvenido, {userName}</p>
+            <button className="logout-button" onClick={handleLogout}>
+              Cerrar sesión
+            </button>
+          </div>
+        )}
       </div>
       <form className="search-bar" onSubmit={handleSearchSubmit}>
         <div className="search-layer">
@@ -77,6 +117,14 @@ function Header() {
           overflow: clip;
           position: relative;
         }
+
+		.logout-container {
+			color: white; /* Forzar el color blanco del texto */
+		}
+
+		.logout-button {
+			color: white; /* Forzar el color blanco del texto del botón */
+		}
 
         .logo-container {
           display: flex;
@@ -118,6 +166,23 @@ function Header() {
         .login-icon {
           width: 80px;
           height: 80px;
+        }
+
+        .logout-container {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          margin-left: auto;
+          margin-right: 80px;
+        }
+
+        .logout-button {
+          cursor: pointer;
+          background: none;
+          border: none;
+          color: #fff;
+          font-size: 16px;
+          text-decoration: underline;
         }
 
         .search-bar {
