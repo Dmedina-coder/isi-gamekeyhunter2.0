@@ -1,0 +1,6 @@
+# arrancar microservicios
+make start_microservices
+# deterner microservicios
+make stop_microservices
+# reiniciar microservicios
+make restart_microservices
