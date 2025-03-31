@@ -14,6 +14,19 @@ function GameDetailsPage() {
   useEffect(() => {
     const postData = async () => {
       try {
+        // Primera llamada al endpoint /api/v1/cheapshark/find
+        const cheapSharkResponse = await fetch(
+          `http://localhost:5040/api/v1/cheapshark/find?title=${gameid}`
+        );
+        const cheapSharkData = await cheapSharkResponse.json();
+
+        // Verificar si el JSON no está vacío
+        if (Object.keys(cheapSharkData).length === 0) {
+          console.log("El JSON está vacío. No se realizará la llamada al puerto 5040.");
+          return;
+        }
+
+        // Si el JSON no está vacío, realizar la llamada al puerto 5040
         const response = await fetch("http://localhost:5040/api/v1/addGame", {
           method: "POST",
           headers: {
@@ -52,13 +65,13 @@ function GameDetailsPage() {
             title={gameid}
           />
           <section className="stores-section">
-            <StoreRecommendation
+            {<StoreRecommendation
               storeName="Nombre Tienda"
               platform="Plataforma"
               price="99.99€"
               storeLogoUrl="https://cdn.builder.io/api/v1/image/assets/TEMP/9c3695b93a052d93070c48846c2bc5631dce5e61"
               platformLogoUrl="https://cdn.builder.io/api/v1/image/assets/TEMP/9c3695b93a052d93070c48846c2bc5631dce5e61"
-            />
+            />}
             <StoreList 
               title={gameid}
             />

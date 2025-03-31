@@ -11,19 +11,29 @@ function Slider() {
     },
     {
       id: 2,
-      src: "https://cdn.allkeyshop.com/images/tiles/slide6.webp?v=1742405611", // Using https://cdn.builder.io/api/v1/image/assets/TEMP/b6f2b8a4adc210b26c6d939be18c9e7f69a68b01f26c905ebe2f34c43728b5ef?placeholderIfAbsent=true&apiKey=f682e8de3cb14cc19333c5fafcca59c5 as placeholder for second image
+      src: "https://cdn.allkeyshop.com/images/tiles/slide2.webp?v=1742405611", // Using https://cdn.builder.io/api/v1/image/assets/TEMP/b6f2b8a4adc210b26c6d939be18c9e7f69a68b01f26c905ebe2f34c43728b5ef?placeholderIfAbsent=true&apiKey=f682e8de3cb14cc19333c5fafcca59c5 as placeholder for second image
       alt: "Featured game 2",
     },
     {
       id: 3,
-      src: "https://cdn.allkeyshop.com/images/tiles/slide4.webp?v=1742405606", // Using https://cdn.builder.io/api/v1/image/assets/TEMP/19ae72ff2779f2f6cd1fd9d5b06347885049c82c8534d15be4b89ace8d3e32a2?placeholderIfAbsent=true&apiKey=f682e8de3cb14cc19333c5fafcca59c5 as placeholder for third image
+      src: "https://cdn.allkeyshop.com/images/tiles/slide3.webp?v=1742405606", // Using https://cdn.builder.io/api/v1/image/assets/TEMP/19ae72ff2779f2f6cd1fd9d5b06347885049c82c8534d15be4b89ace8d3e32a2?placeholderIfAbsent=true&apiKey=f682e8de3cb14cc19333c5fafcca59c5 as placeholder for third image
       alt: "Featured game 3",
     },
     {
       id: 4,
-      src: "https://cdn.allkeyshop.com/images/tiles/slide3.webp?v=1742405613", // Using https://cdn.builder.io/api/v1/image/assets/TEMP/ed5aa7439cd9d9ff3a864c3dac10325030bd741d4780ac40458f0d3318610f95?placeholderIfAbsent=true&apiKey=f682e8de3cb14cc19333c5fafcca59c5 as placeholder for fourth image
+      src: "https://cdn.allkeyshop.com/images/tiles/slide4.webp?v=1742405613", // Using https://cdn.builder.io/api/v1/image/assets/TEMP/ed5aa7439cd9d9ff3a864c3dac10325030bd741d4780ac40458f0d3318610f95?placeholderIfAbsent=true&apiKey=f682e8de3cb14cc19333c5fafcca59c5 as placeholder for fourth image
       alt: "Featured game 4",
     },
+	{
+		id: 5,
+		src: "https://cdn.allkeyshop.com/images/tiles/slide5.webp?v=1742405606", // Using https://cdn.builder.io/api/v1/image/assets/TEMP/19ae72ff2779f2f6cd1fd9d5b06347885049c82c8534d15be4b89ace8d3e32a2?placeholderIfAbsent=true&apiKey=f682e8de3cb14cc19333c5fafcca59c5 as placeholder for third image
+		alt: "Featured game 5",
+	  },
+	  {
+		id: 6,
+		src: "https://cdn.allkeyshop.com/images/tiles/slide6.webp?v=1742405613", // Using https://cdn.builder.io/api/v1/image/assets/TEMP/ed5aa7439cd9d9ff3a864c3dac10325030bd741d4780ac40458f0d3318610f95?placeholderIfAbsent=true&apiKey=f682e8de3cb14cc19333c5fafcca59c5 as placeholder for fourth image
+		alt: "Featured game 6",
+	  },
   ];
 
   // State for current slide index
