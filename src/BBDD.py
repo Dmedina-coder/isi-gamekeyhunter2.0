@@ -156,8 +156,10 @@ def addGame():
         )
         db.session.add(game)
         db.session.commit()
-
-    userGame = Usuario_Juego(
+        
+    relacion = Usuario_Juego.query.filter_by(ID_Usuario=user.ID,ID_Juego=game.ID).first()
+    if not relacion:
+        userGame = Usuario_Juego(
         ID_Usuario=user.ID,
         ID_Juego=game.ID
     )
