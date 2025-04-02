@@ -1,0 +1,56 @@
+version: "3.8"
+
+services:
+  servicio1:
+    build: ./backend/steam
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend/steam:/app
+    networks:
+      - mi_red
+
+  servicio2:
+    build: ./backend/epicgames
+    ports:
+      - "5010:5010"
+    volumes:
+      - ./backend/epicgames:/app
+    networks:
+      - mi_red
+
+  servicio3:
+    build: ./backend/cheapshark
+    ports:
+      - "5020:5020"
+    volumes:
+      - ./backend/cheapshark:/app
+    networks:
+      - mi_red
+
+  servicio4:
+    build: ./backend/bbdd
+    ports:
+      - "5040:5040"
+    volumes:
+      - ./backend/bbdd:/app
+    networks:
+      - mi_red
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    networks:
+      - mi_red
+    depends_on:
+      - servicio1
+      - servicio2
+      - servicio3
+      - servicio4
+
+networks:
+  mi_red:
+    driver: bridge

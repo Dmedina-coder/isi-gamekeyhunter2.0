@@ -4,3 +4,10 @@ make start_microservices
 make stop_microservices
 # reiniciar microservicios
 make restart_microservices
+
+
+#docker
+docker-compose up --build
+docker-compose down
+docker-compose build
+docker-compose up -d

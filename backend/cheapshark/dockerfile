@@ -1,0 +1,11 @@
+FROM python:3.10
+
+WORKDIR /app
+
+COPY cheapshark/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY cheapshark/ .
+
+EXPOSE 5020  # Puerto del servicio
+CMD ["python", "cheapshark.py"]
