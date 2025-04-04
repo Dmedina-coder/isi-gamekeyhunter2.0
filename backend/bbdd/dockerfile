@@ -7,5 +7,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY bbdd/ .
 
-EXPOSE 5040  # Puerto del servicio
+EXPOSE 5040
 CMD ["python", "BBDD.py"]

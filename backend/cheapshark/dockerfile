@@ -7,5 +7,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY cheapshark/ .
 
-EXPOSE 5020  # Puerto del servicio
+EXPOSE 5020
 CMD ["python", "cheapshark.py"]

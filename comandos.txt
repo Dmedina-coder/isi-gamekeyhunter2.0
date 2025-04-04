@@ -1,13 +1,22 @@
+/////////////////////////////MAKEFILE/////////////////////////////
 # arrancar microservicios
 make start_microservices
 # deterner microservicios
 make stop_microservices
 # reiniciar microservicios
 make restart_microservices
-
-
-#docker
-docker-compose up --build
-docker-compose down
-docker-compose build
-docker-compose up -d
+/////////////////////////////DOCKER/////////////////////////////
+#descargar imagenes
+docker pull "imagen"
+#visualizar imagenes
+docker images
+#visualizar contenedores
+docker ps -a
+#arrancar contenedor
+docker start id
+#detener contenedor
+docker stop "id"
+#borrar contenedor
+docker rm "id"
+#entrar en contenedor
+docker attach "id"

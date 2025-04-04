@@ -7,5 +7,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY epicgames/ .
 
-EXPOSE 5010  # Puerto del servicio
+EXPOSE 5010
 CMD ["python", "epicgames.py"]
