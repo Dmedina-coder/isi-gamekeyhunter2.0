@@ -20,3 +20,8 @@ docker stop "id"
 docker rm "id"
 #entrar en contenedor
 docker attach "id"
+
+#build docker compose
+docker compose build
+#arrancar docker compose
+docker compose run

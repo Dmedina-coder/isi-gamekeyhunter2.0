@@ -2,10 +2,10 @@ FROM python:3.10
 
 WORKDIR /app
 
-COPY steam/requirements.txt .
+COPY ./requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY steam/ .
+COPY ./ .
 
 EXPOSE 5000
 CMD ["python", "steam.py"]

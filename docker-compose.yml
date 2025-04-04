@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   servicio1:
     container_name: steam
