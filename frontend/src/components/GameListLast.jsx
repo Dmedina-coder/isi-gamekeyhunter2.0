@@ -11,7 +11,15 @@ function GameListMost({ title, className }) {
   useEffect(() => {
     const fetchGames = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:5020/api/v1/cheapshark/lastgames");
+		const bbddRes = await fetch("http://127.0.0.1:5040/api/v1/latestGames")
+		const consulta = await bbddRes.json();
+        const response = await fetch("http://127.0.0.1:5020/api/v1/cheapshark/lastgames", {
+			method: "POST", // Cambiar a POST para enviar datos
+			headers: {
+			  "Content-Type": "application/json", // Especificar que el cuerpo es JSON
+			},
+			body: JSON.stringify({response: consulta}), // Convertir el JSON a una cadena para enviarlo
+		  });
         if (!response.ok) {
           throw new Error("Error al obtener los datos del servidor");
         }

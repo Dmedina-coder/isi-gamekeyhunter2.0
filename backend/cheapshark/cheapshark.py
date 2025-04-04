@@ -25,82 +25,74 @@ def cheapShark():
     return strResult
 
 #curl "http://127.0.0.1:5020/api/v1/cheapshark/populargames"
-@app.route("/api/v1/cheapshark/populargames", methods=['GET'])
+@app.route("/api/v1/cheapshark/populargames", methods=['POST'])
 def mostsearched():
     
-    global strResult
-    response = requests.get(
-        "http://127.0.0.1:5040/api/v1/mostPopularGames"
-    )
-    
-    if response.status_code == 200:
-        # Crear un nuevo JSON con los valores deseados
-        data = response.json().get("juegos", [])
-        custom_json = []
-        for game in data:
-            responseJuego = requests.get(
-            "http://127.0.0.1:5020/api/v1/cheapshark/find?title="+(game.get("Nombre").replace("-",""))
-            )
-            
-            datosJuegos = responseJuego.json()
-            
-            idSteam = datosJuegos.get("info", {}).get("steamAppID", "730")
-            
-            responseIMG = requests.get(
-            "http://127.0.0.1:5030/api/v1/steam/findid?id="+idSteam
-            )
-            datosImagen = responseIMG.json()
-            
-            custom_json.append({
-                "name": game.get("Nombre", "Sin nombre"),  
-                "price": datosJuegos.get("deals", [])[0].get("price", "99,99€"),  
-                "img": datosImagen.get(idSteam, []).get("data", {}).get("header_image", None)
-            })
+# Obtener el JSON enviado en el cuerpo de la solicitud
+    request_data = request.get_json()
+    if not request_data or 'response' not in request_data:
+        return jsonify({"error": "No se envió un JSON válido con la clave 'response'"}), 400
 
-        ##print(response.json())
-    else:
-        print(f"Error al obtener los datos: {response.status_code}")
+    # Obtener el JSON enviado bajo la clave 'response'
+    response_data = request_data['response']
+
+    # Procesar los datos (ejemplo)
+    custom_json = []
+    for game in response_data.get("juegos", []):
+        responseJuego = requests.get(
+            "http://127.0.0.1:5020/api/v1/cheapshark/find?title=" + (game.get("Nombre", "").replace("-", ""))
+        )
         
-    return custom_json
+        datosJuegos = responseJuego.json()
+        idSteam = datosJuegos.get("info", {}).get("steamAppID", "730")
+        
+        # Buscamos imagen miniatura
+        responseIMG = requests.get(
+             "https://store.steampowered.com/api/appdetails?appids="+idSteam+"&cc=EU&l=es"
+    	)
+        datosImagen = responseIMG.json()
+        
+        custom_json.append({
+            "name": game.get("Nombre", "Sin nombre"),  
+            "price": datosJuegos.get("deals", [])[0].get("price", "99,99€"),  
+            "img": datosImagen.get(idSteam, {}).get("data", {}).get("header_image", None)
+        })
 
+    return jsonify(custom_json)
 #curl "http://127.0.0.1:5020/api/v1/cheapshark/lastgames"
-@app.route("/api/v1/cheapshark/lastgames", methods=['GET'])
+@app.route("/api/v1/cheapshark/lastgames", methods=['POST'])
 def lastsearched():
-    
-    global strResult
-    response = requests.get(
-        "http://127.0.0.1:5040/api/v1/latestGames"
-    )
-    
-    if response.status_code == 200:
-        # Crear un nuevo JSON con los valores deseados
-        data = response.json().get("juegos", [])
-        custom_json = []
-        for game in data:
-            responseJuego = requests.get(
-            "http://127.0.0.1:5020/api/v1/cheapshark/find?title="+(game.get("Nombre").replace("-",""))
-            )
-            
-            datosJuegos = responseJuego.json()
-            
-            idSteam = datosJuegos.get("info", {}).get("steamAppID", "730")
-            
-            responseIMG = requests.get(
-            "http://127.0.0.1:5030/api/v1/steam/findid?id="+idSteam
-            )
-            datosImagen = responseIMG.json()
-            
-            custom_json.append({
-                "name": game.get("Nombre", "Sin nombre"),  
-                "price": datosJuegos.get("deals", [])[0].get("price", "99,99€"),  
-                "img": datosImagen.get(idSteam, []).get("data", {}).get("header_image", None)
-            })
+    # Obtener el JSON enviado en el cuerpo de la solicitud
+    request_data = request.get_json()
+    if not request_data or 'response' not in request_data:
+        return jsonify({"error": "No se envió un JSON válido con la clave 'response'"}), 400
 
-        ##print(response.json())
-    else:
-        print(f"Error al obtener los datos: {response.status_code}")
+    # Obtener el JSON enviado bajo la clave 'response'
+    response_data = request_data['response']
+
+    # Procesar los datos (ejemplo)
+    custom_json = []
+    for game in response_data.get("juegos", []):
+        responseJuego = requests.get(
+            "http://127.0.0.1:5020/api/v1/cheapshark/find?title=" + (game.get("Nombre", "").replace("-", ""))
+        )
         
-    return custom_json 
+        datosJuegos = responseJuego.json()
+        idSteam = datosJuegos.get("info", {}).get("steamAppID", "730")
+        
+        # Buscamos imagen miniatura
+        responseIMG = requests.get(
+             "https://store.steampowered.com/api/appdetails?appids="+idSteam+"&cc=EU&l=es"
+    	)
+        datosImagen = responseIMG.json()
+        
+        custom_json.append({
+            "name": game.get("Nombre", "Sin nombre"),  
+            "price": datosJuegos.get("deals", [])[0].get("price", "99,99€"),  
+            "img": datosImagen.get(idSteam, {}).get("data", {}).get("header_image", None)
+        })
+
+    return jsonify(custom_json)
 
 #curl "http://127.0.0.1:5020/api/v1/cheapshark/steamid?title=???"
 @app.route("/api/v1/cheapshark/steamid", methods=['GET'])
