@@ -3,7 +3,7 @@ services:
     container_name: steam
     build: ./backend/steam
     ports:
-      - "5000:5000"
+      - "5030:5030"
     volumes:
       - ./backend/steam:/app
     networks:

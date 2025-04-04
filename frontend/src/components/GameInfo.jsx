@@ -13,11 +13,11 @@ function GameInfo( {title} ) {
     const fetchInfo = async () => {
       try {
         const responseID = await fetch(`http://127.0.0.1:5020/api/v1/cheapshark/steamidJson?title=${formattedTitle}`);
-        const response = await fetch(`http://127.0.0.1:5000/api/v1/steam/find?title=${formattedTitle}`);
-        if (!response.ok) {
-          throw new Error("Error al obtener los datos del servidor");
-        }
         const id = await responseID.json();
+		const response = await fetch(`http://127.0.0.1:5030/api/v1/steam/findid?id=${id.steamAppID}`);
+		if (!response.ok) {
+			throw new Error("Error al obtener los datos del servidor");
+		  }
         const data = await response.json();
 
         setGameID(id.steamAppID);

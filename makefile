@@ -6,7 +6,7 @@ MICROSERVICIO3 = ./src/cheapshark.py
 MICROSERVICIO4 = ./src/BBDD.py
 
 # Puertos
-PORT1 = 5000
+PORT1 = 5030
 PORT2 = 5010
 PORT3 = 5020
 PORT4 = 5040

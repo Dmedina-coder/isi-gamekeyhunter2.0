@@ -47,7 +47,7 @@ def mostsearched():
             idSteam = datosJuegos.get("info", {}).get("steamAppID", "730")
             
             responseIMG = requests.get(
-            "http://127.0.0.1:5000/api/v1/steam/findid?id="+idSteam
+            "http://127.0.0.1:5030/api/v1/steam/findid?id="+idSteam
             )
             datosImagen = responseIMG.json()
             
@@ -86,7 +86,7 @@ def lastsearched():
             idSteam = datosJuegos.get("info", {}).get("steamAppID", "730")
             
             responseIMG = requests.get(
-            "http://127.0.0.1:5000/api/v1/steam/findid?id="+idSteam
+            "http://127.0.0.1:5030/api/v1/steam/findid?id="+idSteam
             )
             datosImagen = responseIMG.json()
             

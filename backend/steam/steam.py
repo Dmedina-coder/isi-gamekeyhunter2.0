@@ -6,7 +6,7 @@ import requests
 app=Flask(__name__)
 CORS(app)
 
-#curl "http://127.0.0.1:5000/api/v1/steam/find?title=???"
+#curl "http://127.0.0.1:5030/api/v1/steam/find?title=???"
 @app.route("/api/v1/steam/find", methods=['GET'])
 def steam():
     
@@ -27,7 +27,7 @@ def steam():
     
     return strResult    
 
-#curl "http://127.0.0.1:5000/api/v1/steam/findid?id=???"
+#curl "http://127.0.0.1:5030/api/v1/steam/findid?id=???"
 @app.route("/api/v1/steam/findid", methods=['GET'])
 def steamidgame():
     
@@ -47,4 +47,4 @@ def steamidgame():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5030, debug=True)
