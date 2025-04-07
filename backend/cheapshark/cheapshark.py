@@ -44,18 +44,20 @@ def mostsearched():
         
         # Buscamos imagen miniatura
         responseIMG = requests.get(
-             "https://store.steampowered.com/api/appdetails?appids="+str(idSteam)+"&cc=EU&l=es"
+        	"https://store.steampowered.com/api/appdetails?appids="+str(idSteam)+"&cc=EU&l=es"
     	)
-        datosImagen = responseIMG.json()
         
+        datosImagen = responseIMG.json()
+  
         custom_json.append({
             "name": game.get("Nombre", "Sin nombre"),  
-            "price": datosImagen.get(idSteam, {}).get("data", {}).get("price_overview", {}).get("final_formatted", "99,99"),  
+            "price": datosImagen.get(str(idSteam), {}).get("data", {}).get("price_overview", {}).get("final", "99,99"),  
             #"img": datosImagen.get(idSteam, {}).get("data", {}).get("header_image", None)
             "img": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/"+str(idSteam)+"/header.jpg"
         })
 
     return jsonify(custom_json)
+
 #curl "http://127.0.0.1:5020/api/v1/cheapshark/lastgames"
 @app.route("/api/v1/cheapshark/lastgames", methods=['POST'])
 def lastsearched():
@@ -81,7 +83,7 @@ def lastsearched():
         
         custom_json.append({
             "name": game.get("Nombre", "Sin nombre"),  
-            "price": datosImagen.get(idSteam, {}).get("data", {}).get("price_overview", {}).get("final_formatted", "99,99"),  
+            "price": datosImagen.get(str(idSteam), {}).get("data", {}).get("price_overview", {}).get("final", "99,99"),  
             "img": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/"+str(idSteam)+"/header.jpg"
         })
 

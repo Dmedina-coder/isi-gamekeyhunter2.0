@@ -75,7 +75,7 @@ function GameListMost({ title, className }) {
             gameCards.push(
               <GameCard
                   title={game.name || "NA"} // Ajusta según la estructura del JSON
-                  price={game.price+"€" || "00.00€"} // Ajusta según la estructura del JSON
+                  price={(Number(game.price)/ 100).toString() +"€" || "00.00€"} // Ajusta según la estructura del JSON
                   image={game.img || ""} // Ajusta según la estructura del JSON
                 />
             )
