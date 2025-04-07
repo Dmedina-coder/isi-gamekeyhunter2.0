@@ -39,6 +39,7 @@ class Usuarios(db.Model):
 class Juegos(db.Model):
     ID = db.Column(db.Integer, primary_key = True)
     Nombre = db.Column(db.String(100))
+    IDsteam = db.Column(db.Integer)
 
 class Usuario_Juego(db.Model):
     ID_UJ = db.Column(db.Integer, primary_key = True)
@@ -139,7 +140,7 @@ def addGame():
     data = request.json  # Obtener datos del request
 
     # Validar que los campos requeridos estén presentes
-    required_fields = ["ID_Usuario", "NombreJuego"]
+    required_fields = ["ID_Usuario", "NombreJuego", "SteamID"]
     for field in required_fields:
         if field not in data:
             return jsonify({"error": f"Falta el campo '{field}'"}), 400
@@ -152,7 +153,8 @@ def addGame():
     game = Juegos.query.filter_by(Nombre=data["NombreJuego"]).first()
     if not game:
         game = Juegos(
-            Nombre=data["NombreJuego"]
+            Nombre=data["NombreJuego"],
+            IDsteam=data["SteamID"]
         )
         db.session.add(game)
         db.session.commit()
@@ -206,7 +208,7 @@ def latest_games():
     games = Juegos.query.order_by(Juegos.ID.desc()).limit(5).all()
 
     # Formatear la respuesta en JSON
-    games_list = [{"ID": game.ID, "Nombre": game.Nombre} for game in games]
+    games_list = [{"ID": game.ID, "Nombre": game.Nombre, "IDsteam": game.IDsteam} for game in games]
 
     return jsonify({"juegos": games_list})
 
@@ -216,7 +218,7 @@ from sqlalchemy import func
 def most_popular_games():
     # Contar cuántas veces cada juego aparece en la tabla Usuario_Juego
     popular_games = (
-        db.session.query(Juegos.Nombre, func.count(Usuario_Juego.ID_Juego).label("Cantidad"))
+        db.session.query(Juegos.Nombre, func.count(Usuario_Juego.ID_Juego).label("Cantidad"), Juegos.IDsteam)
         .join(Usuario_Juego, Juegos.ID == Usuario_Juego.ID_Juego)
         .group_by(Juegos.ID)
         .order_by(func.count(Usuario_Juego.ID_Juego).desc())  # Orden descendente
@@ -225,7 +227,7 @@ def most_popular_games():
     )
 
     # Formatear la respuesta en JSON
-    games_list = [{"Nombre": game.Nombre, "VecesJugado": game.Cantidad} for game in popular_games]
+    games_list = [{"Nombre": game.Nombre, "VecesJugado": game.Cantidad, "IDsteam": game.IDsteam} for game in popular_games]
 
     return jsonify({"juegos": games_list})
 

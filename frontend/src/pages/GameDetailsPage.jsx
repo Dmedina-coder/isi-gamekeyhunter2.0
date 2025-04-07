@@ -8,50 +8,7 @@ import StoreList from "../components/StoreList";
 import Footer from "../components/Footer";
 
 function GameDetailsPage() {
-  const { gameid } = useParams(); // Get the 'gameid' parameter from the URL
-  const userID = sessionStorage.getItem("userId") || "1";
-
-  useEffect(() => {
-    const postData = async () => {
-      try {
-        // Primera llamada al endpoint /api/v1/cheapshark/find
-        const cheapSharkResponse = await fetch(
-          `http://localhost:5040/api/v1/cheapshark/find?title=${gameid}`
-        );
-        const cheapSharkData = await cheapSharkResponse.json();
-
-        // Verificar si el JSON no está vacío
-        if (Object.keys(cheapSharkData).length === 0) {
-          console.log("El JSON está vacío. No se realizará la llamada al puerto 5040.");
-          return;
-        }
-
-        // Si el JSON no está vacío, realizar la llamada al puerto 5040
-        const response = await fetch("http://localhost:5040/api/v1/addGame", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ID_Usuario: userID, // Asegúrate de que sea un número
-            NombreJuego: gameid,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Error en la solicitud POST");
-        }
-
-        const data = await response.json();
-        console.log("Respuesta de la API:", data);
-      } catch (error) {
-        console.error("Error al realizar la solicitud POST:", error);
-      }
-    };
-
-    postData();
-  }, []); // Ejecutar cuando 'gameid' o 'userID' cambien
-
+	const { gameid } = useParams(); // Get the 'gameid' parameter from the URL
   return (
     <>
       <link

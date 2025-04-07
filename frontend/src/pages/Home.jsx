@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
-import img from "../media/Game.webp";
-
+import AdBanner from '../components/AdBanner';
 import Header from "../components/Header";
 import Slider from "../components/Slider";
 import NewsSection from "../components/FreeSection";
@@ -21,6 +20,7 @@ function Home() {
         title="TOP 5 MAS BUSCADOS"
         className="top-searched"
       />
+	  <AdBanner adText="¡Anuncio! Descubre las mejores ofertas en juegos aquí." className="top-ad" />
       <GameListLast
         title="TOP 5 ULTIMOS BUSCADOS"
         className="latest-searched"

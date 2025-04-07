@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom"; // Import useParams from React Router
 import steam from "../steam.json"
 
 function GameInfo( {title} ) {
-  const [gameData, setGameData] = useState(null);
-  const [gameID, setGameID] = useState(null);
-  const [error, setError] = useState(null);
-
+  	const [gameData, setGameData] = useState(null);
+  	const [error, setError] = useState(null);
 	const formattedTitle = title.replace(/ /g, "-");
+	const { gameid } = useParams(); // Get the 'gameid' parameter from the URL
+	const userID = sessionStorage.getItem("userId") || "1";
+  
+	useEffect(() => {
+	  const postData = async () => {
+		try {
+		  // Primera llamada al endpoint /api/v1/cheapshark/find
+		  const cheapSharkResponse = await fetch(
+			`http://127.0.0.1:5020/api/v1/cheapshark/steamidJson?title=${formattedTitle}`
+		  );
+		  const cheapSharkData = await cheapSharkResponse.json();
+  
 
-  useEffect(() => {
-
-    const fetchInfo = async () => {
-      try {
         const responseID = await fetch(`http://127.0.0.1:5020/api/v1/cheapshark/steamidJson?title=${formattedTitle}`);
         const id = await responseID.json();
 		const response = await fetch(`http://127.0.0.1:5030/api/v1/steam/findid?id=${id.steamAppID}`);
@@ -20,7 +27,22 @@ function GameInfo( {title} ) {
 		  }
         const data = await response.json();
 
-        setGameID(id.steamAppID);
+		const responseBBDD = await fetch("http://localhost:5040/api/v1/addGame", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				ID_Usuario: userID, 
+				NombreJuego: gameid,
+				SteamID: id.steamAppID,
+				}),
+			});
+			  
+		if (!response.ok) {
+			throw new Error("Error en la solicitud POST");
+		}
+
         setGameData({
           name: data[id.steamAppID].data.name, // Nombre del juego
           platform: data[id.steamAppID].data.platforms.windows ? "PC" : "Other", // Verifica si está disponible en Windows
@@ -32,7 +54,7 @@ function GameInfo( {title} ) {
         setError(err.message);
       } 
     };
-    fetchInfo();
+	postData();
   }, []);
 
   if (!gameData) {

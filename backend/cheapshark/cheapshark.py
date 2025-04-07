@@ -39,23 +39,20 @@ def mostsearched():
     # Procesar los datos (ejemplo)
     custom_json = []
     for game in response_data.get("juegos", []):
-        responseJuego = requests.get(
-            "http://127.0.0.1:5020/api/v1/cheapshark/find?title=" + (game.get("Nombre", "").replace("-", ""))
-        )
         
-        datosJuegos = responseJuego.json()
-        idSteam = datosJuegos.get("info", {}).get("steamAppID", "730")
+        idSteam = game.get("IDsteam", 730)
         
         # Buscamos imagen miniatura
         responseIMG = requests.get(
-             "https://store.steampowered.com/api/appdetails?appids="+idSteam+"&cc=EU&l=es"
+             "https://store.steampowered.com/api/appdetails?appids="+str(idSteam)+"&cc=EU&l=es"
     	)
         datosImagen = responseIMG.json()
         
         custom_json.append({
             "name": game.get("Nombre", "Sin nombre"),  
-            "price": datosJuegos.get("deals", [])[0].get("price", "99,99€"),  
-            "img": datosImagen.get(idSteam, {}).get("data", {}).get("header_image", None)
+            "price": datosImagen.get(idSteam, {}).get("data", {}).get("price_overview", {}).get("final_formatted", "99,99"),  
+            #"img": datosImagen.get(idSteam, {}).get("data", {}).get("header_image", None)
+            "img": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/"+str(idSteam)+"/header.jpg"
         })
 
     return jsonify(custom_json)
@@ -73,23 +70,19 @@ def lastsearched():
     # Procesar los datos (ejemplo)
     custom_json = []
     for game in response_data.get("juegos", []):
-        responseJuego = requests.get(
-            "http://127.0.0.1:5020/api/v1/cheapshark/find?title=" + (game.get("Nombre", "").replace("-", ""))
-        )
-        
-        datosJuegos = responseJuego.json()
-        idSteam = datosJuegos.get("info", {}).get("steamAppID", "730")
+
+        idSteam = game.get("IDsteam", 730)
         
         # Buscamos imagen miniatura
         responseIMG = requests.get(
-             "https://store.steampowered.com/api/appdetails?appids="+idSteam+"&cc=EU&l=es"
+             "https://store.steampowered.com/api/appdetails?appids="+str(idSteam)+"&cc=EU&l=es"
     	)
         datosImagen = responseIMG.json()
         
         custom_json.append({
             "name": game.get("Nombre", "Sin nombre"),  
-            "price": datosJuegos.get("deals", [])[0].get("price", "99,99€"),  
-            "img": datosImagen.get(idSteam, {}).get("data", {}).get("header_image", None)
+            "price": datosImagen.get(idSteam, {}).get("data", {}).get("price_overview", {}).get("final_formatted", "99,99"),  
+            "img": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/"+str(idSteam)+"/header.jpg"
         })
 
     return jsonify(custom_json)
@@ -100,7 +93,7 @@ def cheapSharkGameID():
     
     global strResult
     response = requests.get(
-    "https://www.cheapshark.com/api/1.0/games?title="+request.args["title"]
+    	"https://www.cheapshark.com/api/1.0/games?title="+request.args["title"]
     )
     
     if response.status_code != 200:

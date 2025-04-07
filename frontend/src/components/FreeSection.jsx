@@ -104,9 +104,9 @@ function FreeSection() {
 
         .news-image {
           max-width: 100%;
-          min-width: 30%;
+          min-width: 20%;
           height: auto;
-          aspect-ratio: 10 / 16; /* Maintain a 16:9 aspect ratio */
+          aspect-ratio: 9 / 16; /* Maintain a 16:9 aspect ratio */
           object-position: center; /* Center the image */
           max-height: 300px; /* Limit the height of the image */
         }

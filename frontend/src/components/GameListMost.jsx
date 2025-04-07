@@ -14,7 +14,7 @@ function GameListMost({ title, className }) {
 		const bbddRes = await fetch("http://127.0.0.1:5040/api/v1/mostPopularGames")
 		const consulta = await bbddRes.json();
         const response = await fetch("http://127.0.0.1:5020/api/v1/cheapshark/populargames", {
-			method: "POST", // Cambiar a POST para enviar datos
+			method: "POST",
 			headers: {
 			  "Content-Type": "application/json", // Especificar que el cuerpo es JSON
 			},
