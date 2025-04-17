@@ -18,10 +18,14 @@ def cheapShark():
     "https://www.cheapshark.com/api/1.0/games?id="+str(responseID.json())
     )
     
-    if response.status_code != 200:
+    if response.status_code == 404:
+        return []
+    elif response.status_code != 200:
         strResult = "Error: No se pudo mostrar los datos de la API de CheapShark. Abortando", response.status_code
+    # Si el resultado es "-1", devuelve una lista vacía
     else:
         strResult = response.json()
+    
     return strResult
 
 #curl "http://127.0.0.1:5020/api/v1/cheapshark/populargames"
@@ -113,8 +117,9 @@ def cheapSharkGameIDJSON():
     response = requests.get(
     "https://www.cheapshark.com/api/1.0/games?title="+request.args["title"]
     )
-    
-    if response.status_code != 200:
+    if len(response.json()) == 0:
+        return []
+    elif response.status_code != 200:
         strResult = "Error: No se pudo mostrar los datos de la API de CheapShark. Abortando", response.status_code
     else:
         strResult = str(response.json()[0]["steamAppID"])
@@ -130,8 +135,12 @@ def cheapSharkID():
     "https://www.cheapshark.com/api/1.0/games?title="+request.args["title"]
     )
     
+    data = response.json()
+    
     if response.status_code != 200:
         strResult = "Error: No se pudo mostrar los datos de la API de CheapShark. Abortando", response.status_code
+    if not data:  # Verifica si el JSON está vacío
+        return "-1"
     else:
         strResult = response.json()[0]["gameID"]
     

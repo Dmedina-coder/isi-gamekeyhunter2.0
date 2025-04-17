@@ -127,6 +127,27 @@ def register():
     
     return jsonify({"result":"ok", "ID_Usuario": user.ID})
 
+
+@app.route("/api/v1/deleteUser", methods=['DELETE'])
+def delete_user():
+    data = request.json
+
+    # Verificar que el campo "ID_Usuario" esté presente
+    if "ID_Usuario" not in data:
+        return jsonify({"error": "Falta el campo 'ID_Usuario'"}), 400
+
+    # Buscar el usuario en la base de datos
+    user = Usuarios.query.filter_by(ID=data["ID_Usuario"]).first()
+
+    # Verificar si el usuario existe
+    if not user:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    # Eliminar el usuario
+    db.session.delete(user)
+    db.session.commit()
+
+    return jsonify({"result": "ok", "message": f"Usuario con ID {data['ID_Usuario']} eliminado correctamente"})
 #endpoint para añadir un juego
 # curl -X POST http://localhost:5040/api/v1/addGame \
 # -H "Content-Type: application/json" \
@@ -162,12 +183,12 @@ def addGame():
     relacion = Usuario_Juego.query.filter_by(ID_Usuario=user.ID,ID_Juego=game.ID).first()
     if not relacion:
         userGame = Usuario_Juego(
-        ID_Usuario=user.ID,
-        ID_Juego=game.ID
-    )
+			ID_Usuario=user.ID,
+			ID_Juego=game.ID
+   		)
+        db.session.add(userGame)
+        db.session.commit()
 
-    db.session.add(userGame)
-    db.session.commit()
     return jsonify({"result":"ok"})
 
 #endpoint para añadir un genero

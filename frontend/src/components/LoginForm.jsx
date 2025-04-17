@@ -4,10 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 
 function LoginForm() {
 	const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+	const [email, setEmail] = useState("");
+  	const [password, setPassword] = useState("");
 
-  const handleLogin = async () => {
+  	const handleLogin = async () => {
     if (!email || !password) {
       alert("Por favor, completa todos los campos.");
       return;

@@ -23,11 +23,7 @@ function GameDetailsPage() {
           />
           <section className="stores-section">
             {<StoreRecommendation
-              storeName="Nombre Tienda"
-              platform="Plataforma"
-              price="99.99€"
-              storeLogoUrl="https://cdn.builder.io/api/v1/image/assets/TEMP/9c3695b93a052d93070c48846c2bc5631dce5e61"
-              platformLogoUrl="https://cdn.builder.io/api/v1/image/assets/TEMP/9c3695b93a052d93070c48846c2bc5631dce5e61"
+              title={gameid}
             />}
             <StoreList 
               title={gameid}

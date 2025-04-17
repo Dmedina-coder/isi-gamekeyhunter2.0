@@ -6,6 +6,7 @@ import GameDetailsPage from './pages/GameDetailsPage';
 import LoginPage from './pages/LoginPage';
 import FormPage from './pages/FormPage';
 import Home from './pages/Home';
+import Test from './testing/Test';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="/game-details/:gameid" element={<GameDetailsPage/>} />
             <Route path="/login" element={<LoginPage/>} />
             <Route path="/form" element={<FormPage/>} />
+			<Route path="/test" element={<Test/>} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>

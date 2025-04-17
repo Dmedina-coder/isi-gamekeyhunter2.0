@@ -1,17 +1,66 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import StoreItem from "./StoreItem";
+import Stores from "../store.json"
 
-function StoreRecommendation({ storeName, platform, price, storeLogoUrl, platformLogoUrl }) {
+function StoreRecommendation({ title }) {
+
+  const [deals, setDeals] = useState([]);
+  const [stores, setStores] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchDeals = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`http://127.0.0.1:5020/api/v1/cheapshark/find?title=${title}`);
+        if (!response.ok) {
+          throw new Error("Error al obtener los datos del servidor");
+        }
+        const data = await response.json();
+        setDeals(data.deals || []); // Asignar las ofertas obtenidas al estado
+      } catch (err) {
+        setError(err.message);
+      } 
+    };
+    
+    fetchDeals();
+  }, [title]);
+
+  useEffect(() => {
+    // Accede directamente al contenido del JSON importado
+    if (Stores) {
+      setStores(Stores);
+    } else {
+      console.error("No se encontraron tiendas en el archivo JSON");
+    }
+  }, []);
+
+  if (deals.length === 0 || stores.length === 0) {
+    return (
+      <div className="loading-container">
+      </div>
+    );
+  }
+
   return (
     <div className="recommendation-container">
       <h2 className="recommendation-title">NUESTRA RECOMENDACIÓN</h2>
-      <StoreItem
-            key={"1"}
-            storeName={"G2A"} 
-            price={"99,99 €"}
-            storeLogoUrl={"https://www.g2a.com/static/assets/favicon.ico"}
-            storeUrl={"https://www.g2a.com/?adid=GA-ES_PEB_ON_SK_KEY_PURE_BRAND-English&id=35&utm_medium=cpc&utm_source=google&utm_campaign=GA-ES_PEB_ON_SK_KEY_PURE_BRAND-English&utm_id=310893744&gad_source=1&gclid=Cj0KCQjw1um-BhDtARIsABjU5x5-L-NTjHcnl1QpvOJef9CjpMJEbPG1U1nuJEGfkGAunIvxxU4oeosaAsUOEALw_wcB&gclsrc=aw.ds"}
-          />
+      {deals.map((deal) => {
+        // Buscar la tienda correspondiente en el JSON de Stores
+        const store = stores.find((store) => store.storeID === deal.storeID);
+		if (deal.storeID === "1") {
+			return (
+			<StoreItem
+				key={deal.storeID}
+				storeName={store ? store.storeName : "Unknown Store"} // Mostrar el nombre de la tienda si se encuentra
+				price={`${deal.price} €`}
+				storeLogoUrl={`https://www.cheapshark.com/img/stores/icons/${Number(deal.storeID) - 1}.png?v=1.0`}
+				storeUrl={`https://www.cheapshark.com/redirect?dealID=${deal.dealID}&k=1`}
+			/>
+			);
+		}
+      })}
       <style jsx>{`
         .recommendation-container {
           padding-bottom: 22px;

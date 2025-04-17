@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import StoreItem from "./StoreItem";
+import StoreRecommendation from "./StoreRecommendation";
 import CheapShark from "../cheapshark.json"
 import Stores from "../store.json"
 
@@ -49,31 +50,6 @@ function StoreList({ title }) {
   if (deals.length === 0 || stores.length === 0) {
     return (
       <div className="loading-container">
-        <div className="spinner"></div>
-        <style jsx>{`
-          .loading-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 50vh;
-          }
-          .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(255, 255, 255, 0.3);
-            border-top: 5px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-          }
-          @keyframes spin {
-            0% {
-              transform: rotate(0deg);
-            }
-            100% {
-              transform: rotate(360deg);
-            }
-          }
-        `}</style>
       </div>
     );
   }
